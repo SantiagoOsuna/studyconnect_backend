@@ -7,12 +7,20 @@ dotenv.config();
 class Database {
   constructor() {
     if (!Database.instance) {
+
+      const isProduction = process.env.DB_HOST.includes("amazonaws.com");
+
       this.pool = new Pool({
         user: process.env.DB_USER,
         host: process.env.DB_HOST,
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
         port: process.env.DB_PORT,
+
+        // 🔥 CLAVE PARA RDS
+        ssl: isProduction
+          ? { rejectUnauthorized: false }
+          : false,
       });
 
       Database.instance = this;
