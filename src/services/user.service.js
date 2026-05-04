@@ -1,52 +1,48 @@
-import * as userRepo from '../repositories/user.repository.js';
+import userRepo from '../repositories/user.repository.js';
 import bcrypt from 'bcrypt';
 
-export const registerUser = async (data) => {
-  const { name, email, password } = data;
+class UserService {
 
-  if (!name || !email || !password) {
-    throw new Error('Todos los campos son obligatorios');
+  async registerUser(data) {
+    const { name, email, password } = data;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    return userRepo.create(name, email, hashedPassword);
   }
 
-  const existingUser = await userRepo.findUserByEmail(email);
+  async loginUser(email, password) {
+    const user = await userRepo.findByEmail(email);
 
-  if (existingUser.rows.length > 0) {
-    throw new Error('El usuario ya existe');
+    if (!user) {
+      throw new Error('Usuario no encontrado');
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      throw new Error('Contraseña incorrecta');
+    }
+
+    return user;
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const result = await userRepo.createUser(name, email, hashedPassword);
-  return result.rows[0];
-};
-
-export const getUserById = async (id) => {
-  const result = await userRepo.findUserById(id);
-
-  if (result.rows.length === 0) {
-    throw new Error('Usuario no encontrado');
+  getUserById(id) {
+    return userRepo.findUserById(id);
   }
 
-  return result.rows[0];
-};
-
-export const getUsers = async () => {
-  const result = await userRepo.getAllUsers();
-  return result.rows;
-};
-
-export const updateUserService = async (id, data) => {
-  const { name, email } = data;
-
-  const result = await userRepo.updateUser(id, name, email);
-
-  if (result.rows.length === 0) {
-    throw new Error('Usuario no encontrado');
+  getUsers() {
+    return userRepo.getAllUsers();
   }
 
-  return result.rows[0];
-};
+  updateUserService(id, data) {
+    const { name, email } = data;
+    return userRepo.updateUser(id, name, email);
+  }
 
-export const deleteUserService = async (id) => {
-  await userRepo.deleteUser(id);
-};
+  deleteUserService(id) {
+    return userRepo.deleteUser(id);
+  }
+}
+
+export default new UserService();

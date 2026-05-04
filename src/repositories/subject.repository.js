@@ -1,22 +1,34 @@
 import db from '../config/db.js';
 
-export const createSubject = (userId, name, color) => {
-  return db.query(
-    'INSERT INTO Subjects (user_id, name, color) VALUES ($1, $2, $3) RETURNING *',
-    [userId, name, color]
-  );
-};
+class SubjectRepository {
+  async create({ user_id, name, color }) {
+    const result = await db.query(
+      'INSERT INTO Subjects (user_id, name, color) VALUES ($1, $2, $3) RETURNING *',
+      [user_id, name, color]
+    );
+    return result.rows[0];
+  }
 
-export const getSubjectsByUser = (userId) => {
-  return db.query(
-    'SELECT * FROM Subjects WHERE user_id = $1',
-    [userId]
-  );
-};
+  async getSubjectsByUser(user_id) {
+    const result = await db.query(
+      'SELECT * FROM Subjects WHERE user_id = $1',
+      [user_id]
+    );
+    return result.rows;
+  }
 
-export const deleteSubject = (id) => {
-  return db.query(
-    'DELETE FROM Subjects WHERE id = $1',
-    [id]
-  );
-};
+  async updateSubject(id, { name, color }) {
+    const result = await db.query(
+      'UPDATE Subjects SET name = $1, color = $2 WHERE id = $3 RETURNING *',
+      [name, color, id]
+    );
+    return result.rows[0];
+  }
+
+  async deleteSubject(id) {
+    await db.query(
+      'DELETE FROM Subjects WHERE id = $1', [id]);
+  }
+}
+
+export default new SubjectRepository();

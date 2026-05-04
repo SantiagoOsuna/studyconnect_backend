@@ -1,19 +1,21 @@
-import * as subjectRepo from '../repositories/subject.repository.js';
+import subjectRepo from '../repositories/subject.repository.js';
 
-export const createSubjectService = async (userId, data) => {
-  const { name, color } = data;
+class SubjectService {
+  create(data) {
+    return subjectRepo.create(data);
+  }
 
-  if (!name) throw new Error('El nombre es obligatorio');
+  getSubjectsByUser(userId) {
+    return subjectRepo.getSubjectsByUser(userId);
+  }
 
-  const result = await subjectRepo.createSubject(userId, name, color);
-  return result.rows[0];
-};
+  updateSubject(id, data) {
+    return subjectRepo.updateSubject(id, data);
+  }
 
-export const getSubjectsService = async (userId) => {
-  const result = await subjectRepo.getSubjectsByUser(userId);
-  return result.rows;
-};
+  deleteSubject(id) {
+    return subjectRepo.deleteSubject(id);
+  }
+}
 
-export const deleteSubjectService = async (id) => {
-  await subjectRepo.deleteSubject(id);
-};
+export default new SubjectService();
