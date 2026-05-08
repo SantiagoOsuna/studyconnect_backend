@@ -1,13 +1,13 @@
 import userService from '../services/user.service.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import logger from '../config/logger.js';
 
 // REGISTER
 export const register = async (req, res) => {
   try {
     const user = await userService.registerUser(req.body);
-    res.json(user);
+    res.status(201).json(user);
   } catch (error) {
+    logger.error('Error en registro:', error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -17,22 +17,16 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await userService.loginUser(email, password);
+    const result = await userService.loginUser(email, password);
 
-    if (!user) {
-      return res.status(400).json({ message: 'Usuario no encontrado' });
-    }
-
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '2h' }
-    );
-
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
+    res.json({
+      token: result.token,
+      user: { id: result.user.id, name: result.user.name, email: result.user.email }
+    });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    logger.error('Error en login:', error);
+    res.status(401).json({ message: error.message });
   }
 };
 
@@ -42,6 +36,7 @@ export const getUsers = async (req, res) => {
     const users = await userService.getUsers();
     res.json(users);
   } catch (error) {
+    logger.error('Error al obtener usuarios:', error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -52,6 +47,7 @@ export const getUser = async (req, res) => {
     const user = await userService.getUserById(req.params.id);
     res.json(user);
   } catch (error) {
+    logger.error('Error al obtener usuario:', error);
     res.status(404).json({ message: error.message });
   }
 };
@@ -62,6 +58,7 @@ export const updateUser = async (req, res) => {
     const user = await userService.updateUserService(req.params.id, req.body);
     res.json(user);
   } catch (error) {
+    logger.error('Error al actualizar usuario:', error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -72,6 +69,7 @@ export const deleteUser = async (req, res) => {
     await userService.deleteUserService(req.params.id);
     res.json({ message: 'Usuario eliminado' });
   } catch (error) {
+    logger.error('Error al eliminar usuario:', error);
     res.status(500).json({ message: error.message });
   }
 };
