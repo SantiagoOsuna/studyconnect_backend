@@ -4,7 +4,7 @@ import logger from '../config/logger.js';
 class ActivityService {
   async create(data) {
     try {
-      if (!data.subject_id || !data.name) {
+      if (!data.subject_id || !data.title) {
         throw new Error('subject_id y name son requeridos');
       }
       const activity = await activityRepo.create(data);
