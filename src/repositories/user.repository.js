@@ -42,10 +42,11 @@ class UserRepository {
   }
 
   async deleteUser(id) {
-    await db.query(
+    const result = await db.query(
       'DELETE FROM Users WHERE id = $1',
       [id]
     );
+    return result.rowCount;
   }
 }
 

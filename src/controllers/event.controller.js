@@ -38,6 +38,7 @@ export const deleteEvent = async (req, res) => {
     res.json({ message: "Evento eliminado" });
   } catch (error) {
     logger.error('Error al eliminar evento:', error);
-    res.status(500).json({ message: error.message });
+    const status = error.message.includes('no encontrado') ? 404 : 500;
+    res.status(status).json({ message: error.message });
   }
 };

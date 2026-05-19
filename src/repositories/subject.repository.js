@@ -26,8 +26,11 @@ class SubjectRepository {
   }
 
   async deleteSubject(id) {
-    await db.query(
-      'DELETE FROM Subjects WHERE id = $1', [id]);
+    const result = await db.query(
+      'DELETE FROM Subjects WHERE id = $1',
+      [id]
+    );
+    return result.rowCount;
   }
 }
 

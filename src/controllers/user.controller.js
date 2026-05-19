@@ -1,7 +1,6 @@
 import userService from '../services/user.service.js';
 import logger from '../config/logger.js';
 
-// REGISTER
 export const register = async (req, res) => {
   try {
     const user = await userService.registerUser(req.body);
@@ -12,7 +11,6 @@ export const register = async (req, res) => {
   }
 };
 
-// LOGIN
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -30,7 +28,6 @@ export const login = async (req, res) => {
   }
 };
 
-// GET ALL USERS
 export const getUsers = async (req, res) => {
   try {
     const users = await userService.getUsers();
@@ -41,7 +38,6 @@ export const getUsers = async (req, res) => {
   }
 };
 
-// GET USER BY ID
 export const getUser = async (req, res) => {
   try {
     const user = await userService.getUserById(req.params.id);
@@ -52,7 +48,6 @@ export const getUser = async (req, res) => {
   }
 };
 
-// UPDATE USER
 export const updateUser = async (req, res) => {
   try {
     const user = await userService.updateUserService(req.params.id, req.body);
@@ -63,13 +58,13 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// DELETE USER
 export const deleteUser = async (req, res) => {
   try {
     await userService.deleteUserService(req.params.id);
     res.json({ message: 'Usuario eliminado' });
   } catch (error) {
     logger.error('Error al eliminar usuario:', error);
-    res.status(500).json({ message: error.message });
+    const status = error.message.includes('no encontrado') ? 404 : 500;
+    res.status(status).json({ message: error.message });
   }
 };

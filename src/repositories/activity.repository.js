@@ -34,7 +34,8 @@ class ActivityRepository {
   }
 
   async delete(id) {
-    await db.query(`DELETE FROM activities WHERE id=$1`, [id]);
+    const result = await db.query(`DELETE FROM activities WHERE id=$1`, [id]);
+    return result.rowCount;
   }
 }
 
