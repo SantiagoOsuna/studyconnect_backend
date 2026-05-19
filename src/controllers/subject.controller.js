@@ -1,7 +1,6 @@
 import subjectService from '../services/subject.service.js';
 import logger from '../config/logger.js';
 
-// CREATE
 export const createSubject = async (req, res) => {
   try {
     const subject = await subjectService.create({
@@ -16,7 +15,6 @@ export const createSubject = async (req, res) => {
   }
 };
 
-// GET
 export const getSubjects = async (req, res) => {
   try {
     const subjects = await subjectService.getSubjectsByUser(req.user.id);
@@ -27,7 +25,6 @@ export const getSubjects = async (req, res) => {
   }
 };
 
-// UPDATE
 export const updateSubjects = async (req, res) => {
   try {
     const updated = await subjectService.updateSubject(
@@ -42,7 +39,6 @@ export const updateSubjects = async (req, res) => {
   }
 };
 
-// DELETE
 export const deleteSubject = async (req, res) => {
   try {
     await subjectService.deleteSubject(req.params.id);

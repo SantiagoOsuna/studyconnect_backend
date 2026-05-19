@@ -5,7 +5,7 @@ class ActivityService {
   async create(data) {
     try {
       if (!data.subject_id || !data.title) {
-        throw new Error('subject_id y name son requeridos');
+        throw new Error('subject_id y title son requeridos');
       }
       const activity = await activityRepo.create(data);
       logger.info('Actividad creada exitosamente', { activityId: activity.id });

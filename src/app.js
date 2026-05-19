@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 
-// Configurar CORS para permitir cualquier origen (ajustar en producción)
+// CORS
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
