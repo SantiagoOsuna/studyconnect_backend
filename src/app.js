@@ -11,9 +11,22 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  'https://study-connect-hibrido.vercel.app',
+  'https://main.d41shxx4r9d5w.amplifyapp.com'
+];
+
 // CORS
 app.use(cors({
-  origin: 'https://main.d41shxx4r9d5w.amplifyapp.com',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origen no permitido por CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

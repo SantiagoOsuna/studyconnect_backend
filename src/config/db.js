@@ -17,7 +17,7 @@ class Database {
         password: process.env.DB_PASSWORD,
         port: process.env.DB_PORT,
 
-        // 🔥 CLAVE PARA RDS
+        // CLAVE PARA RDS
         ssl: isProduction
           ? { rejectUnauthorized: false }
           : false,
