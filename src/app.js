@@ -13,7 +13,7 @@ const app = express();
 
 // CORS
 app.use(cors({
-  origin: '*',
+  origin: 'https://main.d41shxx4r9d5w.amplifyapp.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
